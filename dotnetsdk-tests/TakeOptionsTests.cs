@@ -30,6 +30,9 @@ namespace dotnetsdk_tests
             var d = new Dictionary<string, Func<TakeOptions, TakeOptions>>
             {
                 { "selector", takeOptions => takeOptions.Selector("x") },
+                { "capture_beyond_viewport", takeOptions => takeOptions.CaptureBeyondViewport(true) },
+                { "scroll_into_view", takeOptions => takeOptions.ScrollIntoView(".hello") },
+                { "scroll_into_view_adjust_top", takeOptions => takeOptions.ScrollIntoViewAdjustTop(500) },
                 { "format", takeOptions => takeOptions.Format(Format.GIF) },
                 { "response_type", takeOptions => takeOptions.ResponseType(ResponseType.ByFormat) },
                 { "full_page", takeOptions => takeOptions.FullPage(true) },
