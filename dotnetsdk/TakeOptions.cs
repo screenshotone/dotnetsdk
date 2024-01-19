@@ -26,6 +26,29 @@ namespace ScreenshotOne
          * A CSS-like selector of the element to take a screenshot of. It is optional.
          */
         public TakeOptions Selector(string selector) => Add("selector", selector);
+        
+        /**
+        * When you take a full page screenshot or a screenshot of an element by selector, there is a rare case where the page or the part of the element might not be visible on the viewport.
+        * 
+        * With the capture_beyond_viewport option, you control if you want to take the screenshot of the full page or the element (capture_beyond_viewport=true) or if you are OK with taking a screenshot of the part of the page or the element (capture_beyond_viewport=false).
+        * When you take full page screenshot or you take screenshot of an element by selector.
+        * The option is set to true by default.
+        */
+        public TakeOptions CaptureBeyondViewport(bool captureBeyondViewport) => Add("capture_beyond_viewport", captureBeyondViewport.ToTrueFalseString());
+        
+        /**
+        * It scrolls the page if needed and ensures that the given selector is present in the view when taking a screenshot.
+        *
+        * If more than one element matches the selector, the first visible element in DOM is selected.
+        */
+        public TakeOptions ScrollIntoView(string scrollIntoView) => Add("scroll_into_view", scrollIntoView);
+
+        /**
+        * After the given element appears in the viewport and its top coordinate is aligned with the viewport’s top, you can adjust the position a bit before taking a screenshot by specifying the scroll_into_view_adjust_top parameter.
+        * 
+        * By default, it is 0. But you can use negative and positive integers.
+        */
+        public TakeOptions ScrollIntoViewAdjustTop(int adjustAmount) => Add("scroll_into_view_adjust_top", adjustAmount.ToString());
 
         /**
          * Sets response format, one of: "png", "jpeg", "webp" or "jpg".

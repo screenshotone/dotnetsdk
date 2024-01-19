@@ -45,7 +45,7 @@ namespace ScreenshotOne
             }
             
             var queryString = $"{BuildQueryString(takeOptions.Query)}&access_key={_accessKey}";
-            var finalQueryString = (!string.IsNullOrWhiteSpace(_secretKey) ? Sign(queryString) : queryString);
+            var finalQueryString = SignIfRequired(queryString);
 
             if (!Uri.TryCreate(BaseUrl + "?" + finalQueryString, UriKind.Absolute, out var uri))
             {
@@ -77,17 +77,17 @@ namespace ScreenshotOne
         private static string BuildQueryString(IReadOnlyDictionary<string, List<string>> queryParams)=> 
             string.Join("&", queryParams.SelectMany(x => x.Value.Select(val => $"{x.Key}={UrlEncoder.Default.Encode(val)}")));
         
-        private string Sign(string queryString)
+        private string SignIfRequired(string queryString)
         {
-            var encoding = new UTF8Encoding();
-            var textBytes = encoding.GetBytes(queryString);
-            var keyBytes = encoding.GetBytes(_secretKey);
-            byte[] hashBytes;
+            if (_secretKey is null)
+                return queryString;
+            
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_secretKey));
+            var data = Encoding.UTF8.GetBytes(queryString);
+            var hash = hmac.ComputeHash(data);
 
-            using (var hash = new HMACSHA256(keyBytes))
-                hashBytes = hash.ComputeHash(textBytes);
-
-            var signature = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            // Convert the hash to a hexadecimal string
+            var signature = BitConverter.ToString(hash).Replace("-", "").ToLower();
 
             return $"{queryString}&signature={signature}";
         }
