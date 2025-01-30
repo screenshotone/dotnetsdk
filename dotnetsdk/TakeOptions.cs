@@ -369,7 +369,9 @@ namespace ScreenshotOne
         [Description("heif")]
         HEIF,
         [Description("html")]
-        HTML
+        HTML,
+        [Description("pdf")]
+        PDF
     }
 
     public enum TimeZone
